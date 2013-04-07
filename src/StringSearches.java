@@ -1,3 +1,6 @@
+import java.util.Arrays;
+
+
 public class StringSearches {
 
 	/**
@@ -13,8 +16,8 @@ public class StringSearches {
 		for (int i = 0; i<map.length;i++){
 			map[i] = needle.length();
 		}
-		for(int i = 0; i< needle.length() -1; i++){
-			map[needle.indexOf(i)] = Math.max(needle.length() - needle.lastIndexOf(i) - 1, 1);
+		for(int i = 0; i < needle.length(); i++){
+			map[needle.charAt(i)] = Math.max(needle.length() - needle.lastIndexOf(needle.charAt(i)) - 1, 1);
 		}
 		return map;
 	}
@@ -34,7 +37,38 @@ public class StringSearches {
 	 * 
 	 */
 	public static int[] boyerMoore(String needle, String haystack) {
-		return null;
+		int[] charTable = buildCharTable(needle);
+		int[] indexes = new int[haystack.length()/needle.length()];
+		int lettersMatched = 0;
+		int matched = 0;
+		int j = needle.length()-1;
+		
+		for (int i = needle.length()-1; i >= 0;){
+			if(j > haystack.length()-1)
+				break;
+			if(needle.charAt(i)==haystack.charAt(j)){
+				lettersMatched++;
+				if(lettersMatched == needle.length()){
+					indexes[matched] = j;
+					matched++;
+					i = needle.length()-1;
+					j += needle.length()+1;
+					lettersMatched = 0;
+				}
+				j--;
+				i--;
+				
+			}
+			else{
+				j += needle.length()-Math.min(i, 1 + charTable[j]);
+				i = needle.length()-1;
+				lettersMatched = 0;
+			}
+				
+				
+		}
+		
+		return Arrays.copyOf(indexes,matched);
 	}
 
 	/**
@@ -43,7 +77,25 @@ public class StringSearches {
 	 * needle.substring(0, i)
 	 */
 	public static int[] buildTable(String needle) {
-		return null;
+		 int[] table = new int[needle.length()];
+		 int pos = 2;
+		 int cnd = 0;
+		 
+		 table[0] = -1; 
+		 table[1] = 0; 
+		 while(pos < needle.length()) {
+			 if(needle.charAt(pos-1) == needle.charAt(cnd)) {
+				 table[pos] = cnd;
+				 cnd += 1;
+				 pos += 1;
+			 }else if(cnd > 0)
+				 	cnd = table[cnd];
+			 	 	else{
+					 table[pos] = 0;
+					 pos += 1;
+			 	 	}
+			 }
+		 return table;
 	}
 
 	/**
@@ -56,7 +108,29 @@ public class StringSearches {
 	 * matches return an empty array, new int[0]
 	 */
 	public static int[] kmp(String needle, String haystack) {
-		return null;
+		int[] table = buildTable(needle);
+		int[] indexes = new int[haystack.length()/needle.length()];
+		int lettersMatched = 0;
+		int matched = 0;
+		int j = 0;
+		
+		for (int i = 0; i < haystack.length() -1; i++){
+			if(needle.charAt(j) == haystack.charAt(i)){
+				lettersMatched++;
+				j++;
+				if(lettersMatched == needle.length()){
+					indexes[matched] = i-needle.length()+1;
+					matched++;
+					j = 0;
+				}
+			}else if(j != 0){
+					j = table[j];
+					i--;
+			}
+				
+		}
+			
+		return Arrays.copyOf(indexes,matched);
 	}
 
 	// This is the base you should use, don't change it
