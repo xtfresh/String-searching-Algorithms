@@ -116,9 +116,9 @@ public class StringSearchesTest {
 		int first[] = { 10 }, second[] = new int[0], third[] = { 33 }, fourth[] = new int[0];
 		int firstSearch[] = StringSearches.kmp(fox[1], fox[0]),
 				secondSearch[] = StringSearches.kmp(fox[2], fox[0]),
-				thirdSearch[] = StringSearches.kmp(fox[3], fox[0]), 
+				thirdSearch[] = StringSearches.kmp(fox[3], fox[0]),
 				fourthSearch[] = StringSearches.kmp(fox[4], fox[0]);
-		System.out.println(fox[3]);
+		System.out.println(fox[2]);
 		System.out.println(fox[0]);
 		assertArrayEquals(first, firstSearch);
 		assertArrayEquals(second, secondSearch);
@@ -126,7 +126,7 @@ public class StringSearchesTest {
 		assertArrayEquals(fourth, fourthSearch);
 	}
 
-	@Test
+	@Test	
 	public void testFoxRabinKarp() {
 
 		int first[] = { 10 }, second[] = new int[0], third[] = { 33 }, fourth[] = new int[0];
@@ -145,8 +145,6 @@ public class StringSearchesTest {
 		int first[] = { 4, 8, 12, 16, 20, 24, 28 }, second[] = { 0 };
 		int firstSearch[] = StringSearches.boyerMoore(dog[1], dog[0]),
 				secondSearch[] = StringSearches.boyerMoore(dog[2], dog[0]);
-		System.out.println(dog[1]);
-		System.out.println(dog[0]);
 		assertArrayEquals(first, firstSearch);
 		assertArrayEquals(second, secondSearch);
 	}
@@ -156,6 +154,8 @@ public class StringSearchesTest {
 		int first[] = { 4, 8, 12, 16, 20, 24, 28 }, second[] = { 0 };
 		int firstSearch[] = StringSearches.kmp(dog[1], dog[0]),
 				secondSearch[] = StringSearches.kmp(dog[2], dog[0]);
+		System.out.println(dog[1]);
+		System.out.println(dog[0]);
 		assertArrayEquals(first, firstSearch);
 		assertArrayEquals(second, secondSearch);
 	}

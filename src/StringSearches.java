@@ -37,6 +37,9 @@ public class StringSearches {
 	 * 
 	 */
 	public static int[] boyerMoore(String needle, String haystack) {
+		if(needle.length() ==0 || haystack.length() == 0 || needle.length() > haystack.length())
+			return null;
+		
 		int[] charTable = buildCharTable(needle);
 		int[] indexes = new int[haystack.length()/needle.length()];
 		int lettersMatched = 0;
@@ -108,25 +111,29 @@ public class StringSearches {
 	 * matches return an empty array, new int[0]
 	 */
 	public static int[] kmp(String needle, String haystack) {
+		if(needle.length() == 0 || haystack.length() == 0 || needle.length() > haystack.length())
+			return null;
+		System.out.println(haystack.length());
+		
 		int[] table = buildTable(needle);
 		int[] indexes = new int[haystack.length()/needle.length()];
-		int lettersMatched = 0;
 		int matched = 0;
 		int j = 0;
 		
-		for (int i = 0; i < haystack.length() -1; i++){
+		for (int i = 0; i < haystack.length();){
 			if(needle.charAt(j) == haystack.charAt(i)){
-				lettersMatched++;
 				j++;
-				if(lettersMatched == needle.length()){
-					indexes[matched] = i-needle.length()+1;
+				i++;
+				if(j == needle.length()){
+					indexes[matched] = i-j;
 					matched++;
 					j = 0;
 				}
-			}else if(j != 0){
+			}else 
+				if(j > 0){
 					j = table[j];
-					i--;
-			}
+				}else
+					i++;
 				
 		}
 			
