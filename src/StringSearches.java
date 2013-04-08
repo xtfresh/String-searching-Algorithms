@@ -149,7 +149,8 @@ public class StringSearches {
 	 * Power is BASE raised to the power of the length of the needle
 	 */
     public static int updateHash(int oldHash, int power, char newChar,char oldChar) {
-    	return ((oldHash * BASE) - (((int)oldChar) * power) + (int)newChar);
+    	int updatedHash = (oldHash * BASE) - (((int)oldChar) * power) + (int)newChar;
+    	return updatedHash;
     }
 
 	/**
@@ -177,36 +178,35 @@ public class StringSearches {
 	public static int[] rabinKarp(String needle, String haystack) {
 		if(needle.length() == 0 || haystack.length() == 0 || needle.length() > haystack.length())
 			return null;
-		int[] indices = new int[haystack.length() / needle.length()];
-		int comparing_hash = hash(needle);
-		int temp_hash = hash(haystack.substring(0, needle.length()));
+		int[] index = new int[haystack.length() / needle.length()];
+		int hashCompare = hash(needle);
+		int tempHash = hash(haystack.substring(0, needle.length()));
 		int matched = 0;
-		int power = 1;
+		int pwr = 1;
 		
 		for(int i = 0; i < needle.length(); i++){
-			power *= BASE;
+			pwr *= BASE;
 		}
 		
 		for(int i = 0; i <= haystack.length() - needle.length() + 1;){
-			if(comparing_hash == temp_hash){
+			if(hashCompare == tempHash){
 			    if(needle.equals(haystack.substring(i, i + needle.length()))){
-			        indices[matched] = i;
+			        index[matched] = i;
 			        matched++;
 			        i += needle.length();
 			        if(i + needle.length() <= haystack.length()){
-			            temp_hash = hash(haystack.substring(i, i + needle.length()));
-			            continue;
+			            tempHash = hash(haystack.substring(i, i + needle.length()));			            
 			        }
 			        else break;
 			    }
 			}
 			if(i + needle.length() < haystack.length()){
-			    temp_hash = updateHash(temp_hash, power, haystack.charAt(i + needle.length()), haystack.charAt(i));
+			    tempHash = updateHash(tempHash, pwr, haystack.charAt(i + needle.length()), haystack.charAt(i));
 			    i++;
 			}else 
 				break;
 		}
-		return Arrays.copyOf(indices, matched);
+		return Arrays.copyOf(index, matched);
 	}
 
 }
