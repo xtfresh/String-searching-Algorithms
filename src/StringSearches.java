@@ -113,7 +113,6 @@ public class StringSearches {
 	public static int[] kmp(String needle, String haystack) {
 		if(needle.length() == 0 || haystack.length() == 0 || needle.length() > haystack.length())
 			return null;
-		System.out.println(haystack.length());
 		
 		int[] table = buildTable(needle);
 		int[] indexes = new int[haystack.length()/needle.length()];
@@ -149,28 +148,65 @@ public class StringSearches {
 	 * 
 	 * Power is BASE raised to the power of the length of the needle
 	 */
-	public static int updateHash(int oldHash, int power, char newChar,
-			char oldChar) {
-		return 0;
-	}
+    public static int updateHash(int oldHash, int power, char newChar,char oldChar) {
+    	return ((oldHash * BASE) - (((int)oldChar) * power) + (int)newChar);
+    }
 
 	/**
-	 * Hash the given string, using the formula given in the homework
-	 */
+	* Hash the given string, using the formula given in the homework
+	*/
 	public static int hash(String s) {
-		return 0;
+		int count = 0;
+		int temp = 1;
+	    for(int i = s.length() - 1; i >= 0; i--){
+			count += ((int)s.charAt(i)) * temp;
+			temp *= BASE;
+		}
+	    return count;
+	}
+	
+	/**
+	* Run Rabin-Karp on the given strings, looking for needle in haystack.
+	* Return an array of the indices of the occurrence of the needle in the
+	* haystack.
+	*
+	* If there are matches that start at index 4, 7, and 9 in the
+	* haystack, return an array containing only 4, 7, and 9. If there are no
+	* matches return an empty array, new int[0]
+	*/
+	public static int[] rabinKarp(String needle, String haystack) {
+		if(needle.length() == 0 || haystack.length() == 0 || needle.length() > haystack.length())
+			return null;
+		int[] indices = new int[haystack.length() / needle.length()];
+		int comparing_hash = hash(needle);
+		int temp_hash = hash(haystack.substring(0, needle.length()));
+		int matched = 0;
+		int power = 1;
+		
+		for(int i = 0; i < needle.length(); i++){
+			power *= BASE;
+		}
+		
+		for(int i = 0; i <= haystack.length() - needle.length() + 1;){
+			if(comparing_hash == temp_hash){
+			    if(needle.equals(haystack.substring(i, i + needle.length()))){
+			        indices[matched] = i;
+			        matched++;
+			        i += needle.length();
+			        if(i + needle.length() <= haystack.length()){
+			            temp_hash = hash(haystack.substring(i, i + needle.length()));
+			            continue;
+			        }
+			        else break;
+			    }
+			}
+			if(i + needle.length() < haystack.length()){
+			    temp_hash = updateHash(temp_hash, power, haystack.charAt(i + needle.length()), haystack.charAt(i));
+			    i++;
+			}else 
+				break;
+		}
+		return Arrays.copyOf(indices, matched);
 	}
 
-	/**
-	 * Run Rabin-Karp on the given strings, looking for needle in haystack.
-	 * Return an array of the indices of the occurrence of the needle in the
-	 * haystack.
-	 * 
-	 * If there are matches that start at index 4, 7, and 9 in the
-	 * haystack, return an array containing only 4, 7, and 9. If there are no
-	 * matches return an empty array, new int[0]
-	 */
-	public static int[] rabinKarp(String needle, String haystack) {
-		return null;
-	}
 }
